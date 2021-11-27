@@ -1,12 +1,12 @@
-[programs.localnet]
-save_for_later = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+[programs.devnet]
+save_for_later = "36KXz84PkdRfNQQXzNpswX3s5d5fCPmmqFKhNd31Yd8p"
 
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/home/cone/.config/solana/id.json"
 
 [scripts]
-test = "ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+test = "npx ts-node tests/save-for-later.ts"
