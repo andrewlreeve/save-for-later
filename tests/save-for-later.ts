@@ -1,17 +1,49 @@
-import * as anchor from '@project-serum/anchor';
-import { Program } from '@project-serum/anchor';
-import { SaveForLater } from '../target/types/save_for_later';
+const anchor = require('@project-serum/anchor');
+const { SystemProgram } = anchor.web3;
 
-describe('save-for-later', () => {
+const main = async() => {
+  console.log("Starting test...")
 
-  // Configure the client to use the local cluster.
-  anchor.setProvider(anchor.Provider.env());
+  const provider = anchor.Provider.env();
+  anchor.setProvider(provider);
+  const program = anchor.workspace.Myepicproject;
+  const baseAccount = anchor.web3.Keypair.generate();
 
-  const program = anchor.workspace.SaveForLater as Program<SaveForLater>;
-
-  it('Is initialized!', async () => {
-    // Add your test here.
-    const tx = await program.rpc.initialize({});
-    console.log("Your transaction signature", tx);
+  const tx = await program.rpc.startStuffOff({
+    accounts: {
+      baseAccount: baseAccount.publicKey,
+      user: provider.wallet.publicKey,
+      systemProgram: SystemProgram.programId,
+    },
+    signers: [baseAccount],
   });
-});
+
+  console.log("Your transaction signature", tx);
+
+  let account = await program.account.baseAccount.fetch(baseAccount.publicKey);
+  console.log('Tweet Count: ', account.totalTweets.toString());
+
+  await program.rpc.addTweetId(new anchor.BN('1460679770396520448'), {
+    accounts: {
+      baseAccount: baseAccount.publicKey,
+      user: provider.wallet.publicKey,
+    },
+  });
+
+  account = await program.account.baseAccount.fetch(baseAccount.publicKey);
+  console.log('Tweet Count: ', account.totalTweets.toString());
+
+  console.log('Tweet List: ', account.tweetIds)
+}
+
+const runMain = async() => {
+  try {
+    await main();
+    process.exit(0);
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+runMain();
