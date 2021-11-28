@@ -1,4 +1,4 @@
-const anchor = require('@project-serum/anchor');
+import anchor from '@project-serum/anchor';
 const { SystemProgram } = anchor.web3;
 
 const main = async() => {
